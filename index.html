@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sigma Gaming</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+    }
+    #menu {
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+      border-bottom: 2px solid #444;
+    }
+    .btn {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #444;
+    }
+    #frame {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+    }
+    #password-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="password-screen">
+  <h2>Enter Password</h2>
+  <input type="password" id="password" placeholder="Password">
+  <button class="btn" onclick="checkPassword()">Enter</button>
+</div>
+
+<div id="menu" style="display: none;">
+  <button class="btn" onclick="switchSite('https://newsigmatism.onrender.com')">Newsigmatism</button>
+  <button class="btn" onclick="switchSite('https://sigmatism-ovq4.onrender.com')">Sigmatism OVQ4</button>
+  <button class="btn" onclick="switchSite('https://rvrvrv.onrender.com')">RVRVRV</button>
+  <button class="btn" onclick="switchSite('https://nepu.to')">NEPU</button>
+  <button class="btn" onclick="switchSite('https://ftnf.onrender.com')">FTNF</button>
+  <button class="btn" onclick="switchSite('https://waddle-waddle-1k.onrender.com')">Waddle</button>
+</div>
+
+<iframe id="frame" src="" style="display: none;"></iframe>
+
+<script>
+  const PASSWORD = "KAIKAIKITAN";
+
+  function checkPassword() {
+    const input = document.getElementById("password").value;
+    if (input === PASSWORD) {
+      document.getElementById("password-screen").style.display = "none";
+      document.getElementById("menu").style.display = "block";
+      document.getElementById("frame").style.display = "block";
+      askAboutBlank();
+    } else {
+      alert("Wrong password.");
+    }
+  }
+
+  function switchSite(url) {
+    document.getElementById("frame").src = url;
+  }
+
+  function askAboutBlank() {
+    setTimeout(() => {
+      if (confirm("Open Sigma Gaming menu in a new about:blank tab?")) {
+        const win = window.open("about:blank", "_blank");
+        win.document.write(document.documentElement.outerHTML);
+        win.document.close();
+      }
+    }, 100);
+  }
+</script>
+
+</body>
+</html>
