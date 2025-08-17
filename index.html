@@ -1,72 +1,96 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shinjuku showdown</title> 
+  <meta charset="UTF-8">
+  <title>Ryōiki Tenkai</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
       font-family: Arial, sans-serif;
       background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
       background-size: cover;
-    }
-
-    #menu {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      z-index: 10;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 10px;
-      border-radius: 8px;
-    }
-
-    #menu button {
-      background-color: #111;
       color: white;
-      border: 1px solid crimson;
-      padding: 8px 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.2s ease;
     }
-
-    #menu button:hover {
-      background-color: crimson;
-      color: black;
+    #menu {
+      background-color: rgba(34,34,34,0.8);
+      padding: 10px;
+      text-align: center;
+      border-bottom: 2px solid #444;
     }
-
-    iframe {
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 60px);
+    .btn {
+      background-color: #333;
+      color: white;
       border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #444;
+    }
+    #frame {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+      display: none; /* iframe hidden by default */
+    }
+    #password-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div id="menu">
-    <button onclick="setIframe('https://waddle-waddle-1k.onrender.com/')">Waddle</button>
-    <button onclick="setIframe('https://nepu.to')">NEPU.to</button>
-    <button onclick="setIframe('https://apes.io')">Apes</button>
-  </div>
 
-  <iframe id="mainFrame" src="https://waddle-waddle-1k.onrender.com/"></iframe>
+<div id="password-screen">
+  <h2>Enter Password</h2>
+  <input type="password" id="password" placeholder="Password">
+  <button class="btn" onclick="checkPassword()">Enter</button>
+</div>
 
-  <script>
-    function setIframe(url) {
-      document.getElementById('mainFrame').src = url;
+<div id="menu" style="display: none;">
+  <button class="btn" onclick="switchSite('https://waddle-waddle-1k.onrender.com')">Waddle</button>
+  <button class="btn" onclick="switchSite('https://nepu.to')">Movies</button>
+  <button class="btn" onclick="switchSite('https://apes.io')">Apes.io</button>
+</div>
+
+<iframe id="frame" src=""></iframe>
+
+<script>
+  const PASSWORD = "KAIKAIKITAN";
+
+  function checkPassword() {
+    const input = document.getElementById("password").value;
+    if (input === PASSWORD) {
+      document.getElementById("password-screen").style.display = "none";
+      document.getElementById("menu").style.display = "block";
+      // Do NOT auto-load iframe here anymore
+    } else {
+      alert("Wrong password.");
     }
-  </script>
+  }
+
+  function switchSite(url) {
+    const frame = document.getElementById("frame");
+    frame.src = url;
+    frame.style.display = "block"; // only show iframe after a site is selected
+  }
+</script>
+
 </body>
 </html>
