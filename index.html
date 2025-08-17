@@ -5,148 +5,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Launcher</title>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
-    background-size: cover;
-    font-family: Arial, sans-serif;
-  }
-
-  #overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    flex-direction: column;
-  }
-
-  #passwordContainer, #musicButton {
-    background: rgba(30,30,30,0.95);
-    padding: 30px;
-    border-radius: 15px;
-    color: #ddd;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-  }
-
-  #passwordInput {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-  }
-
-  button {
-    padding: 10px 20px;
-    margin: 10px 5px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background: #333;
-    color: #ddd;
-    font-weight: bold;
-  }
-
-  button:hover {
-    background: #555;
-  }
-
-  #menu {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 5;
-    display: flex;
-    gap: 10px;
-  }
-
-  #menu button {
-    padding: 12px 18px;
-    background: #222;
-    color: #ccc;
-    font-weight: normal;
-    font-size: 14px;
-  }
-
-  iframe {
-    width: 100%;
-    height: calc(100vh - 60px);
-    border: none;
-    margin-top: 60px;
-    display: none;
-  }
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') center/cover no-repeat;
+        overflow: hidden;
+    }
+    #overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+    }
+    #passwordPopup {
+        background: #111;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        color: #fff;
+    }
+    #passwordPopup input {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        margin-top: 10px;
+    }
+    #buttons {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 1000;
+    }
+    .siteButton {
+        background-color: #222;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+    .siteButton:hover {
+        background-color: #444;
+    }
+    #embedFrame {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 60px);
+        border: none;
+    }
+    #musicButton {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background-color: #222;
+        color: #fff;
+        font-weight: bold;
+    }
+    #musicButton:hover {
+        background-color: #444;
+    }
 </style>
 </head>
 <body>
 
 <div id="overlay">
-  <div id="musicButton">
-    <p>Enable Music</p>
-    <button id="startMusic">Start Music</button>
-  </div>
+    <div id="passwordPopup">
+        <h2>Enter Password</h2>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <button id="submitPassword">Submit</button>
+        <button id="musicButton">Enable Music</button>
+    </div>
 </div>
 
-<div id="passwordContainer" style="display:none;">
-  <p>Enter Password:</p>
-  <input type="password" id="passwordInput" placeholder="Password">
-  <button id="passwordBtn">Submit</button>
+<div id="buttons" style="display:none;">
+    <button class="siteButton" data-url="https://skidlauncher-1ue5.onrender.com">Portal A</button>
+    <button class="siteButton" data-url="https://waddle-waddle-1k.onrender.com">Portal B</button>
+    <button class="siteButton" data-url="https://nepu.to">Portal C</button>
+    <button class="siteButton" data-url="https://fednbv.bitbucket.io">Portal D</button>
+    <button class="siteButton" data-url="https://thekingofcurses.bitbucket.io">Portal E</button>
+    <button class="siteButton" data-url="https://eduhelp.uk">Portal F</button>
+    <button class="siteButton" data-url="https://example-lynxlauncher.com">Lynx</button>
+    <button class="siteButton" data-url="https://example-apes.io.com">Apes</button>
 </div>
 
-<audio id="bgMusic" src="videoplayback.mp3" loop></audio>
+<iframe id="embedFrame" src=""></iframe>
 
-<div id="menu" style="display:none;">
-  <button data-src="https://skidlauncher-1ue5.onrender.com">Node One</button>
-  <button data-src="https://kaikaikitan.onrender.com/index.html">Node Two</button>
-  <button data-src="https://fednbv.bitbucket.io">Node Three</button>
-  <button data-src="https://thekingofcurses.bitbucket.io">Node Four</button>
-  <button data-src="https://eduhelp.uk">Node Five</button>
-</div>
-
-<iframe id="embedFrame"></iframe>
+<audio id="bgMusic" loop>
+    <source src="videoplayback.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-  const overlay = document.getElementById('overlay');
-  const musicButton = document.getElementById('musicButton');
-  const startMusic = document.getElementById('startMusic');
-  const bgMusic = document.getElementById('bgMusic');
-  const passwordContainer = document.getElementById('passwordContainer');
-  const passwordBtn = document.getElementById('passwordBtn');
-  const passwordInput = document.getElementById('passwordInput');
-  const menu = document.getElementById('menu');
-  const iframe = document.getElementById('embedFrame');
+    const overlay = document.getElementById('overlay');
+    const submitPassword = document.getElementById('submitPassword');
+    const passwordInput = document.getElementById('passwordInput');
+    const buttons = document.getElementById('buttons');
+    const iframe = document.getElementById('embedFrame');
+    const musicButton = document.getElementById('musicButton');
+    const bgMusic = document.getElementById('bgMusic');
 
-  startMusic.addEventListener('click', () => {
-    bgMusic.play();
-    overlay.style.display = 'none';
-    passwordContainer.style.display = 'block';
-  });
-
-  passwordBtn.addEventListener('click', () => {
-    const password = passwordInput.value;
-    if(password === 'KAIKAIKITAN'){
-      passwordContainer.style.display = 'none';
-      menu.style.display = 'flex';
-    } else {
-      alert('Incorrect password');
-    }
-  });
-
-  menu.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      iframe.src = btn.dataset.src;
-      iframe.style.display = 'block';
+    // Music start button
+    musicButton.addEventListener('click', () => {
+        bgMusic.play();
+        musicButton.style.display = 'none';
     });
-  });
+
+    // Password submit
+    submitPassword.addEventListener('click', () => {
+        if(passwordInput.value === 'KAIKAIKITAN') {
+            overlay.style.display = 'none';
+            buttons.style.display = 'flex';
+        } else {
+            alert('Incorrect password');
+        }
+    });
+
+    // Embed button clicks
+    document.querySelectorAll('.siteButton').forEach(btn => {
+        btn.addEventListener('click', () => {
+            iframe.src = btn.dataset.url;
+        });
+    });
 </script>
 
 </body>
