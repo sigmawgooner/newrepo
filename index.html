@@ -5,117 +5,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Launcher</title>
 <style>
-  /* Fullscreen background GIF */
-  body, html {
+  body {
     margin: 0;
     padding: 0;
-    height: 100%;
-    width: 100%;
     background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
     background-size: cover;
     font-family: Arial, sans-serif;
-    overflow: hidden;
   }
 
-  /* Overlay for buttons and prompts */
   #overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 999;
+    flex-direction: column;
+  }
+
+  #passwordContainer, #musicButton {
+    background: rgba(30,30,30,0.95);
+    padding: 30px;
+    border-radius: 15px;
+    color: #ddd;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  #passwordInput {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
   }
 
   button {
-    padding: 12px 20px;
-    margin: 10px;
-    font-size: 16px;
-    background: #222;
-    color: #ccc;
+    padding: 10px 20px;
+    margin: 10px 5px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s;
+    background: #333;
+    color: #ddd;
+    font-weight: bold;
   }
 
   button:hover {
     background: #555;
   }
 
-  #embedButtons {
-    display: none;
-    position: absolute;
+  #menu {
+    position: fixed;
     top: 10px;
-    width: 100%;
-    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 5;
+    display: flex;
+    gap: 10px;
   }
 
-  #embedContainer {
-    position: absolute;
-    top: 60px;
-    bottom: 0;
-    width: 100%;
+  #menu button {
+    padding: 12px 18px;
+    background: #222;
+    color: #ccc;
+    font-weight: normal;
+    font-size: 14px;
   }
 
   iframe {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 60px);
     border: none;
+    margin-top: 60px;
+    display: none;
   }
 </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="videoplayback.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-
 <div id="overlay">
-  <button id="startMusic">Enable Music</button>
+  <div id="musicButton">
+    <p>Enable Music</p>
+    <button id="startMusic">Start Music</button>
+  </div>
 </div>
 
-<div id="embedButtons">
-  <button onclick="loadEmbed('https://skidlauncher-1ue5.onrender.com')">Launcher</button>
-  <button onclick="loadEmbed('https://nepu.to')">Portal 1</button>
-  <button onclick="loadEmbed('https://waddle-waddle-1k.onrender.com')">Portal 2</button>
-  <button onclick="loadEmbed('https://apes.io')">Game Hub</button>
-  <button onclick="loadEmbed('https://kaikaikitan.onrender.com/index.html')">Mystery</button>
+<div id="passwordContainer" style="display:none;">
+  <p>Enter Password:</p>
+  <input type="password" id="passwordInput" placeholder="Password">
+  <button id="passwordBtn">Submit</button>
 </div>
 
-<div id="embedContainer"></div>
+<audio id="bgMusic" src="videoplayback.mp3" loop></audio>
+
+<div id="menu" style="display:none;">
+  <button data-src="https://skidlauncher-1ue5.onrender.com">Node One</button>
+  <button data-src="https://kaikaikitan.onrender.com/index.html">Node Two</button>
+  <button data-src="https://fednbv.bitbucket.io">Node Three</button>
+  <button data-src="https://thekingofcurses.bitbucket.io">Node Four</button>
+  <button data-src="https://eduhelp.uk">Node Five</button>
+</div>
+
+<iframe id="embedFrame"></iframe>
 
 <script>
-const bgMusic = document.getElementById('bgMusic');
-const overlay = document.getElementById('overlay');
-const startMusic = document.getElementById('startMusic');
-const embedButtons = document.getElementById('embedButtons');
-const embedContainer = document.getElementById('embedContainer');
+  const overlay = document.getElementById('overlay');
+  const musicButton = document.getElementById('musicButton');
+  const startMusic = document.getElementById('startMusic');
+  const bgMusic = document.getElementById('bgMusic');
+  const passwordContainer = document.getElementById('passwordContainer');
+  const passwordBtn = document.getElementById('passwordBtn');
+  const passwordInput = document.getElementById('passwordInput');
+  const menu = document.getElementById('menu');
+  const iframe = document.getElementById('embedFrame');
 
-startMusic.addEventListener('click', () => {
-  bgMusic.play();
-  overlay.innerHTML = ''; // Clear the music button
-  promptPassword();
-});
+  startMusic.addEventListener('click', () => {
+    bgMusic.play();
+    overlay.style.display = 'none';
+    passwordContainer.style.display = 'block';
+  });
 
-function promptPassword() {
-  const password = prompt("Enter the password:");
-  if (password === "KAIKAIKITAN") {
-    overlay.style.display = "none";
-    embedButtons.style.display = "block";
-  } else {
-    alert("Incorrect password!");
-    promptPassword();
-  }
-}
+  passwordBtn.addEventListener('click', () => {
+    const password = passwordInput.value;
+    if(password === 'KAIKAIKITAN'){
+      passwordContainer.style.display = 'none';
+      menu.style.display = 'flex';
+    } else {
+      alert('Incorrect password');
+    }
+  });
 
-function loadEmbed(url) {
-  embedContainer.innerHTML = `<iframe src="${url}"></iframe>`;
-}
+  menu.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      iframe.src = btn.dataset.src;
+      iframe.style.display = 'block';
+    });
+  });
 </script>
 
 </body>
