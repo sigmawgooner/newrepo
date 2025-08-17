@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shinjuku showdown</title>
+<title>Sigma Gaming</title>
 <style>
   body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
     font-family: sans-serif;
+    background: black;
   }
   #background {
     position: fixed;
@@ -20,41 +20,14 @@
     object-fit: cover;
     z-index: -1;
   }
-  #password-container, #buttons, #music-overlay {
+  /* Password screen */
+  #password-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-  }
-  #buttons {
-    display: none;
-  }
-  #buttons button {
-    margin: 10px;
-    padding: 15px 30px;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  #music-overlay {
-    display: none;
-    background: rgba(0,0,0,0.7);
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    transform: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
     color: white;
-    flex-direction: column;
-  }
-  #music-overlay button {
-    padding: 15px 30px;
-    font-size: 20px;
-    cursor: pointer;
   }
   input[type="password"] {
     padding: 10px;
@@ -64,6 +37,76 @@
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
+  }
+  #password-msg {
+    margin-top: 10px;
+  }
+  /* Top bar buttons */
+  #top-bar {
+    display: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(to right, #222, #444);
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+    padding: 10px 0;
+  }
+  #top-bar button {
+    margin: 0 10px;
+    padding: 12px 25px;
+    font-size: 16px;
+    color: #eee;
+    background: #333;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #top-bar button:hover {
+    background: #555;
+  }
+  /* Embed iframe */
+  #embed-container {
+    display: none;
+    position: absolute;
+    top: 60px; /* below the top bar */
+    width: 100%;
+    height: calc(100% - 60px);
+  }
+  #embed-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  /* Music overlay */
+  #music-overlay {
+    display: none;
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    color: white;
+    flex-direction: column;
+  }
+  #music-overlay button {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background: #333;
+    color: #fff;
+  }
+  #music-overlay button:hover {
+    background: #555;
   }
 </style>
 </head>
@@ -80,20 +123,25 @@
   <p id="password-msg" style="color:red;"></p>
 </div>
 
-<!-- Buttons -->
-<div id="buttons">
-  <button onclick="openSite('https://waddle-waddle-1k.onrender.com')">games</button>
-  <button onclick="openSite('https://skidlauncher-1ue5.onrender.com')">LynxLauncher</button>
-  <button onclick="openSite('https://nepu.to')">Nepu.</button>
-  <button onclick="openSite('https://apes.io')">Apes</button>
+<!-- Top bar buttons -->
+<div id="top-bar">
+  <button onclick="loadEmbed('https://waddle-waddle-1k.onrender.com')">Waddle</button>
+  <button onclick="loadEmbed('https://skidlauncher-1ue5.onrender.com')">LynxLauncher</button>
+  <button onclick="loadEmbed('https://nepu.to')">Nepu.to</button>
+  <button onclick="loadEmbed('https://apes.io')">Apes.io</button>
 </div>
 
-<!-- Enable Music Overlay -->
+<!-- Embed container -->
+<div id="embed-container">
+  <iframe id="embed-frame" src=""></iframe>
+</div>
+
+<!-- Music Overlay -->
 <div id="music-overlay">
   <button onclick="startMusic()">Enable Music</button>
 </div>
 
-<!-- Audio Element -->
+<!-- Audio element -->
 <audio id="bg-audio" loop>
   <source src="videoplayback.mp3" type="audio/mpeg">
 </audio>
@@ -103,22 +151,25 @@ const correctPassword = 'KAIKAIKITAN';
 const passwordContainer = document.getElementById('password-container');
 const passwordInput = document.getElementById('password-input');
 const passwordMsg = document.getElementById('password-msg');
-const buttonsDiv = document.getElementById('buttons');
+const topBar = document.getElementById('top-bar');
+const embedContainer = document.getElementById('embed-container');
+const embedFrame = document.getElementById('embed-frame');
 const musicOverlay = document.getElementById('music-overlay');
 const audio = document.getElementById('bg-audio');
 
 function checkPassword() {
   if(passwordInput.value === correctPassword) {
     passwordContainer.style.display = 'none';
-    buttonsDiv.style.display = 'block';
+    topBar.style.display = 'flex';
+    embedContainer.style.display = 'block';
     showMusicOverlay();
   } else {
     passwordMsg.textContent = 'Incorrect password!';
   }
 }
 
-function openSite(url) {
-  window.open(url, '_blank');
+function loadEmbed(url) {
+  embedFrame.src = url;
 }
 
 function showMusicOverlay() {
