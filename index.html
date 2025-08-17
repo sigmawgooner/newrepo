@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,11 +7,12 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') center/cover no-repeat;
+      background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
+      background-size: cover;
       color: white;
     }
     #menu {
-      background-color: rgba(34, 34, 34, 0.9);
+      background-color: rgba(34,34,34,0.9);
       padding: 10px;
       text-align: center;
       border-bottom: 2px solid #444;
@@ -63,12 +64,18 @@
 </div>
 
 <div id="menu" style="display: none;">
-  <button class="btn" onclick="switchSite('https://skidlauncher-1ue5.onrender.com')">Waddle</button>
+  <button class="btn" onclick="switchSite('https://waddle-waddle-1k.onrender.com')">Waddle</button>
   <button class="btn" onclick="switchSite('https://nepu.to')">Movies</button>
   <button class="btn" onclick="switchSite('https://apes.io')">Apes.io</button>
+  <button class="btn" onclick="stopAudio()">Stop Audio</button>
 </div>
 
-<iframe id="frame"></iframe>
+<iframe id="frame" src=""></iframe>
+
+<audio id="bg-audio" loop>
+  <source src="videoplayback.m4a" type="audio/m4a">
+  Your browser does not support the audio element.
+</audio>
 
 <script>
   const PASSWORD = "KAIKAIKITAN";
@@ -87,6 +94,9 @@
 
   function switchSite(url) {
     document.getElementById("frame").src = url;
+    if (url.includes("waddle")) {
+      playAudio();
+    }
   }
 
   function askAboutBlank() {
@@ -97,6 +107,17 @@
         win.document.close();
       }
     }, 100);
+  }
+
+  function playAudio() {
+    const audio = document.getElementById("bg-audio");
+    audio.play();
+  }
+
+  function stopAudio() {
+    const audio = document.getElementById("bg-audio");
+    audio.pause();
+    audio.currentTime = 0;
   }
 </script>
 
