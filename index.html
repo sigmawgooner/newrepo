@@ -7,12 +7,12 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
+      background: url('background.gif') no-repeat center center fixed;
       background-size: cover;
       color: white;
     }
     #menu {
-      background-color: rgba(34,34,34,0.8);
+      background-color: #222;
       padding: 10px;
       text-align: center;
       border-bottom: 2px solid #444;
@@ -32,7 +32,6 @@
       width: 100%;
       height: calc(100vh - 60px);
       border: none;
-      display: none; /* iframe hidden by default */
     }
     #password-screen {
       position: fixed;
@@ -67,9 +66,10 @@
   <button class="btn" onclick="switchSite('https://waddle-waddle-1k.onrender.com')">Waddle</button>
   <button class="btn" onclick="switchSite('https://nepu.to')">Movies</button>
   <button class="btn" onclick="switchSite('https://apes.io')">Apes.io</button>
+  <button class="btn" onclick="downloadOffline()">Download Offline Copy</button>
 </div>
 
-<iframe id="frame" src=""></iframe>
+<iframe id="frame" src="" style="display: none;"></iframe>
 
 <script>
   const PASSWORD = "KAIKAIKITAN";
@@ -79,16 +79,33 @@
     if (input === PASSWORD) {
       document.getElementById("password-screen").style.display = "none";
       document.getElementById("menu").style.display = "block";
-      // Do NOT auto-load iframe here anymore
+      document.getElementById("frame").style.display = "block";
     } else {
       alert("Wrong password.");
     }
   }
 
   function switchSite(url) {
-    const frame = document.getElementById("frame");
-    frame.src = url;
-    frame.style.display = "block"; // only show iframe after a site is selected
+    document.getElementById("frame").src = url;
+  }
+
+  function downloadOffline() {
+    const files = [
+      {name: 'index.html', url: 'index.html'},
+      {name: 'background.gif', url: 'background.gif'},
+      {name: 'waddle-data.zip', url: 'waddle-data.zip'}
+    ];
+
+    files.forEach(file => {
+      const a = document.createElement('a');
+      a.href = file.url;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+
+    alert('Offline files downloaded!');
   }
 </script>
 
