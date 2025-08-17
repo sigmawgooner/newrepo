@@ -36,6 +36,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 500;
+        white-space: nowrap;
     }
     .siteButton {
         background: #222;
@@ -53,7 +54,7 @@
     #musicButton, #musicToggle {
         display: none;
         position: absolute;
-        bottom: 20px;
+        top: 60px;
         left: 50%;
         transform: translateX(-50%);
         background: #222;
@@ -64,13 +65,14 @@
         cursor: pointer;
         font-weight: bold;
         z-index: 600;
+        margin-top: 5px;
     }
     #iframeContainer {
         position: absolute;
-        top: 60px;
+        top: 100px;
         left: 0;
         width: 100%;
-        height: calc(100% - 60px);
+        height: calc(100% - 100px);
         z-index: 100;
     }
     iframe {
@@ -100,6 +102,7 @@
     <button class="siteButton" data-url="https://thekingofcurses.bitbucket.io">Portal E</button>
     <button class="siteButton" data-url="https://eduhelp.uk">Portal F</button>
     <button class="siteButton" data-url="https://apes.io">Portal G</button>
+    <button class="siteButton" id="hideIframe">Hide Iframe</button>
 </div>
 
 <!-- Music Buttons -->
@@ -116,7 +119,7 @@
 </audio>
 
 <script>
-const correctPassword = "KAIKAIKITAN"; // Set your password
+const correctPassword = "KAIKAIKITAN";
 
 const passwordModal = document.getElementById('passwordModal');
 const passwordInput = document.getElementById('passwordInput');
@@ -127,13 +130,14 @@ const musicButton = document.getElementById('musicButton');
 const musicToggle = document.getElementById('musicToggle');
 const bgMusic = document.getElementById('bgMusic');
 const iframe = document.getElementById('iframe');
+const hideIframeBtn = document.getElementById('hideIframe');
 
 let musicPlaying = false;
 
 passwordSubmit.addEventListener('click', () => {
     if(passwordInput.value === correctPassword){
         passwordModal.style.display = 'none';
-        buttons.style.display = 'block';
+        buttons.style.display = 'inline-block';
         musicButton.style.display = 'inline-block';
     } else {
         alert("Wrong password!");
@@ -141,7 +145,6 @@ passwordSubmit.addEventListener('click', () => {
     }
 });
 
-// Music enable first time
 musicButton.addEventListener('click', () => {
     bgMusic.play();
     musicPlaying = true;
@@ -149,7 +152,6 @@ musicButton.addEventListener('click', () => {
     musicToggle.style.display = 'inline-block';
 });
 
-// Music toggle button
 musicToggle.addEventListener('click', () => {
     if(musicPlaying){
         bgMusic.pause();
@@ -160,11 +162,16 @@ musicToggle.addEventListener('click', () => {
     }
 });
 
-// Site button clicks
 document.querySelectorAll('.siteButton').forEach(btn => {
     btn.addEventListener('click', () => {
-        iframe.src = btn.dataset.url;
+        if(btn.id !== "hideIframe"){
+            iframe.src = btn.dataset.url;
+        }
     });
+});
+
+hideIframeBtn.addEventListener('click', () => {
+    iframe.src = "";
 });
 </script>
 
