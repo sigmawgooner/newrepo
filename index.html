@@ -2,123 +2,133 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ryōiki Tenkai</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shinjuku showdown</title>
 <style>
-  body {
+  body, html {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #111;
-    color: white;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
   }
-  #menu {
-    background-color: #222;
-    padding: 10px;
+  #background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+  #password-container, #buttons, #music-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    border-bottom: 2px solid #444;
   }
-  .btn {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
+  #buttons {
+    display: none;
+  }
+  #buttons button {
+    margin: 10px;
+    padding: 15px 30px;
+    font-size: 18px;
     cursor: pointer;
   }
-  .btn:hover {
-    background-color: #444;
-  }
-  #frame {
+  #music-overlay {
+    display: none;
+    background: rgba(0,0,0,0.7);
     width: 100%;
-    height: calc(100vh - 60px);
-    border: none;
-  }
-  #password-screen, #music-screen {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #000;
-    color: white;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform: none;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-  }
-  input {
-    padding: 10px;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  #music-screen {
-    background: rgba(0, 0, 0, 0.85);
-    display: none;
+    z-index: 10000;
+    color: white;
     flex-direction: column;
+  }
+  #music-overlay button {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  input[type="password"] {
+    padding: 10px;
+    font-size: 18px;
+  }
+  #password-container button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-<div id="password-screen">
+<!-- Background GIF -->
+<img id="background" src="clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif" alt="Background">
+
+<!-- Password Screen -->
+<div id="password-container">
   <h2>Enter Password</h2>
-  <input type="password" id="password" placeholder="Password">
-  <button class="btn" onclick="checkPassword()">Enter</button>
+  <input type="password" id="password-input" placeholder="Password">
+  <button onclick="checkPassword()">Enter</button>
+  <p id="password-msg" style="color:red;"></p>
 </div>
 
-<div id="menu" style="display: none;">
-  <button class="btn" onclick="switchSite('https://waddle-waddle-1k.onrender.com')">Waddle</button>
-  <button class="btn" onclick="switchSite('https://skidlauncher-1ue5.onrender.com')">Movies</button>
-  <button class="btn" onclick="switchSite('https://apes.io')">Apes.io</button>
+<!-- Buttons -->
+<div id="buttons">
+  <button onclick="openSite('https://waddle-waddle-1k.onrender.com')">games</button>
+  <button onclick="openSite('https://skidlauncher-1ue5.onrender.com')">LynxLauncher</button>
+  <button onclick="openSite('https://nepu.to')">Nepu.</button>
+  <button onclick="openSite('https://apes.io')">Apes</button>
 </div>
 
-<iframe id="frame" src="" style="display: none;"></iframe>
-
-<!-- Music overlay -->
-<div id="music-screen">
-  <h2>Enable Music</h2>
-  <button class="btn" onclick="enableMusic()">Play Music</button>
+<!-- Enable Music Overlay -->
+<div id="music-overlay">
+  <button onclick="startMusic()">Enable Music</button>
 </div>
 
+<!-- Audio Element -->
 <audio id="bg-audio" loop>
-  <source src="videoplayback.m4a" type="audio/m4a">
+  <source src="videoplayback.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  const PASSWORD = "KAIKAIKITAN";
+const correctPassword = 'KAIKAIKITAN';
+const passwordContainer = document.getElementById('password-container');
+const passwordInput = document.getElementById('password-input');
+const passwordMsg = document.getElementById('password-msg');
+const buttonsDiv = document.getElementById('buttons');
+const musicOverlay = document.getElementById('music-overlay');
+const audio = document.getElementById('bg-audio');
 
-  function checkPassword() {
-    const input = document.getElementById("password").value;
-    if (input === PASSWORD) {
-      document.getElementById("password-screen").style.display = "none";
-      document.getElementById("menu").style.display = "block";
-      document.getElementById("frame").style.display = "block";
-      askAboutBlank();
-    } else {
-      alert("Wrong password.");
-    }
+function checkPassword() {
+  if(passwordInput.value === correctPassword) {
+    passwordContainer.style.display = 'none';
+    buttonsDiv.style.display = 'block';
+    showMusicOverlay();
+  } else {
+    passwordMsg.textContent = 'Incorrect password!';
   }
+}
 
-  function switchSite(url) {
-    document.getElementById("frame").src = url;
-  }
+function openSite(url) {
+  window.open(url, '_blank');
+}
 
-  function askAboutBlank() {
-    setTimeout(() => {
-      if (confirm("Open Ryōiki Tenkai in a new about:blank tab?")) {
-        const win = window.open("about:blank", "_blank");
-        win.document.write(document.documentElement.outerHTML);
-        win.document.close();
-      }
-      // After confirming about:blank, show the music overlay
-      document.getElementById("music-screen").style.display = "flex";
-    }, 100);
-  }
+function showMusicOverlay() {
+  musicOverlay.style.display = 'flex';
+}
 
-  function enableMusic() {
-    const audio = document.getElementById("bg-audio");
-    audio.play().catch(err => {
-      console.log("Audio blocked until user interacts:", err);
-    });
-    document.getElementById("music-screen").style.display = "none";
-  }
+function startMusic() {
+  audio.play();
+  musicOverlay.style.display = 'none';
+}
 </script>
 
 </body>
