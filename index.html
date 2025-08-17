@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sigma Gaming</title>
+<title>Shinjuku showdown</title>
 <style>
   body, html {
     margin: 0;
@@ -32,11 +32,23 @@
   input[type="password"] {
     padding: 10px;
     font-size: 18px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #111;
+    color: #fff;
   }
   #password-container button {
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background: #333;
+    color: #fff;
+    margin-left: 10px;
+  }
+  #password-container button:hover {
+    background: #555;
   }
   #password-msg {
     margin-top: 10px;
@@ -47,33 +59,36 @@
     position: fixed;
     top: 0;
     width: 100%;
-    background: linear-gradient(to right, #222, #444);
+    background: rgba(34,34,34,0.8);
     display: flex;
     justify-content: center;
     z-index: 1000;
-    padding: 10px 0;
+    padding: 12px 0;
+    backdrop-filter: blur(5px);
   }
   #top-bar button {
-    margin: 0 10px;
-    padding: 12px 25px;
+    margin: 0 8px;
+    padding: 12px 28px;
     font-size: 16px;
     color: #eee;
-    background: #333;
+    background: #222;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
   }
   #top-bar button:hover {
     background: #555;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
   }
   /* Embed iframe */
   #embed-container {
     display: none;
     position: absolute;
-    top: 60px; /* below the top bar */
+    top: 70px; /* below the top bar */
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 70px);
   }
   #embed-container iframe {
     width: 100%;
@@ -83,7 +98,7 @@
   /* Music overlay */
   #music-overlay {
     display: none;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.75);
     width: 100%;
     height: 100%;
     top: 0;
@@ -97,16 +112,18 @@
     flex-direction: column;
   }
   #music-overlay button {
-    padding: 15px 30px;
+    padding: 18px 36px;
     font-size: 20px;
     cursor: pointer;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #333;
     color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
   }
   #music-overlay button:hover {
     background: #555;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.8);
   }
 </style>
 </head>
@@ -125,10 +142,11 @@
 
 <!-- Top bar buttons -->
 <div id="top-bar">
-  <button onclick="loadEmbed('https://waddle-waddle-1k.onrender.com')">Waddle</button>
-  <button onclick="loadEmbed('https://skidlauncher-1ue5.onrender.com')">LynxLauncher</button>
-  <button onclick="loadEmbed('https://nepu.to')">Nepu.to</button>
-  <button onclick="loadEmbed('https://apes.io')">Apes.io</button>
+  <button onclick="loadEmbed(0)">Alpha</button>
+  <button onclick="loadEmbed(1)">Beta</button>
+  <button onclick="loadEmbed(2)">Gamma</button>
+  <button onclick="loadEmbed(3)">Delta</button>
+  <button onclick="loadEmbed(4)">Epsilon</button>
 </div>
 
 <!-- Embed container -->
@@ -157,23 +175,29 @@ const embedFrame = document.getElementById('embed-frame');
 const musicOverlay = document.getElementById('music-overlay');
 const audio = document.getElementById('bg-audio');
 
+// Hidden links array
+const embedLinks = [
+  'https://waddle-waddle-1k.onrender.com',
+  'https://skidlauncher-1ue5.onrender.com',
+  'https://nepu.to',
+  'https://apes.io',
+  'https://kaikaikitan.onrender.com/index.html'
+];
+
 function checkPassword() {
   if(passwordInput.value === correctPassword) {
     passwordContainer.style.display = 'none';
     topBar.style.display = 'flex';
     embedContainer.style.display = 'block';
-    showMusicOverlay();
+    musicOverlay.style.display = 'flex';
+    loadEmbed(0); // default
   } else {
     passwordMsg.textContent = 'Incorrect password!';
   }
 }
 
-function loadEmbed(url) {
-  embedFrame.src = url;
-}
-
-function showMusicOverlay() {
-  musicOverlay.style.display = 'flex';
+function loadEmbed(index) {
+  embedFrame.src = embedLinks[index];
 }
 
 function startMusic() {
