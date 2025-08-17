@@ -1,132 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ryōiki Tenkai</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-  }
-  #menu {
-    background-color: #222;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 2px solid #444;
-    display: none;
-  }
-  .btn {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  .btn:hover { background-color: #444; }
-  #frame {
-    width: 100%;
-    height: calc(100vh - 60px);
-    border: none;
-    display: none;
-  }
-  .overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.9);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-  input { padding: 10px; font-size: 16px; margin-top: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <title>Ryōiki Tenkai</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') center/cover no-repeat;
+      color: white;
+    }
+    #menu {
+      background-color: rgba(34, 34, 34, 0.9);
+      padding: 10px;
+      text-align: center;
+      border-bottom: 2px solid #444;
+    }
+    .btn {
+      background-color: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #444;
+    }
+    #frame {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+      display: none;
+    }
+    #password-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Password Screen -->
-<div id="password-screen" class="overlay">
+<div id="password-screen">
   <h2>Enter Password</h2>
   <input type="password" id="password" placeholder="Password">
   <button class="btn" onclick="checkPassword()">Enter</button>
 </div>
 
-<!-- About:blank Popup -->
-<div id="aboutblank-popup" class="overlay" style="display:none;">
-  <h2>Open site in about:blank?</h2>
-  <button class="btn" onclick="openAboutBlank(true)">Yes</button>
-  <button class="btn" onclick="openAboutBlank(false)">No</button>
-</div>
-
-<!-- Offline Prompt Modal -->
-<div id="offline-modal" class="overlay" style="display:none;">
-  <h2>Cache Waddle for Offline Use?</h2>
-  <button class="btn" onclick="cacheWaddle()">Yes, cache</button>
-  <button class="btn" onclick="skipCache()">No, continue</button>
-</div>
-
-<!-- Menu -->
-<div id="menu">
-  <button class="btn" onclick="switchSite('waddle-offline.html')">Waddle</button>
+<div id="menu" style="display: none;">
+  <button class="btn" onclick="switchSite('https://skidlauncher-1ue5.onrender.com')">Waddle</button>
   <button class="btn" onclick="switchSite('https://nepu.to')">Movies</button>
   <button class="btn" onclick="switchSite('https://apes.io')">Apes.io</button>
 </div>
 
-<iframe id="frame" src="" allowtransparency="true"></iframe>
+<iframe id="frame"></iframe>
 
 <script>
-const PASSWORD = "KAIKAIKITAN";
+  const PASSWORD = "KAIKAIKITAN";
 
-function checkPassword() {
-  const input = document.getElementById("password").value;
-  if(input === PASSWORD) {
-    document.getElementById("password-screen").style.display = "none";
-    document.getElementById("aboutblank-popup").style.display = "flex";
-  } else {
-    alert("Wrong password.");
+  function checkPassword() {
+    const input = document.getElementById("password").value;
+    if (input === PASSWORD) {
+      document.getElementById("password-screen").style.display = "none";
+      document.getElementById("menu").style.display = "block";
+      document.getElementById("frame").style.display = "block";
+      askAboutBlank();
+    } else {
+      alert("Wrong password.");
+    }
   }
-}
 
-// About:blank popup logic
-function openAboutBlank(yes) {
-  document.getElementById("aboutblank-popup").style.display = "none";
-  // If yes, iframe will open in about:blank later when clicking
-  localStorage.setItem('openAboutBlank', yes ? 'true' : 'false');
-  document.getElementById("offline-modal").style.display = "flex";
-}
+  function switchSite(url) {
+    document.getElementById("frame").src = url;
+  }
 
-// Offline caching
-function cacheWaddle() {
-  localStorage.setItem('waddle-offline', 'cached');
-  alert("Waddle is now cached for offline use!");
-  document.getElementById("offline-modal").style.display = "none";
-  document.getElementById("menu").style.display = "block";
-}
-
-function skipCache() {
-  document.getElementById("offline-modal").style.display = "none";
-  document.getElementById("menu").style.display = "block";
-}
-
-// Switch iframe site
-function switchSite(url) {
-  const frame = document.getElementById("frame");
-  const openBlank = localStorage.getItem('openAboutBlank') === 'true';
-  frame.src = openBlank ? 'about:blank' : url;
-  frame.style.display = "block";
-
-  // If user chose about:blank, load actual URL inside iframe manually
-  if(openBlank) {
+  function askAboutBlank() {
     setTimeout(() => {
-      frame.contentWindow.location.replace(url);
+      if (confirm("Open Ryōiki Tenkai in a new about:blank tab?")) {
+        const win = window.open("about:blank", "_blank");
+        win.document.write(document.documentElement.outerHTML);
+        win.document.close();
+      }
     }, 100);
   }
-}
 </script>
 
 </body>
