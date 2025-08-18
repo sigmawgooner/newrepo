@@ -51,7 +51,7 @@
     .siteButton:hover {
         background: #555;
     }
-    #musicButton, #musicToggle {
+    #musicButton, #musicToggle, #musicSelector {
         display: none;
         position: absolute;
         top: 60px;
@@ -67,12 +67,17 @@
         z-index: 600;
         margin-top: 5px;
     }
+    #musicSelector {
+        top: 110px;
+        width: 250px;
+        padding: 10px;
+    }
     #iframeContainer {
         position: absolute;
-        top: 100px;
+        top: 160px;
         left: 0;
         width: 100%;
-        height: calc(100% - 100px);
+        height: calc(100% - 160px);
         z-index: 100;
     }
     iframe {
@@ -108,6 +113,28 @@
 <!-- Music Buttons -->
 <button id="musicButton">Enable Music</button>
 <button id="musicToggle">Toggle Music</button>
+<select id="musicSelector">
+    <option value="">Choose a song...</option>
+    <option value="songs/song1.mp3">Song 1</option>
+    <option value="songs/song2.mp3">Song 2</option>
+    <option value="songs/song3.mp3">Song 3</option>
+    <option value="songs/song4.mp3">Song 4</option>
+    <option value="songs/song5.mp3">Song 5</option>
+    <option value="songs/song6.mp3">Song 6</option>
+    <option value="songs/song7.mp3">Song 7</option>
+    <option value="songs/song8.mp3">Song 8</option>
+    <option value="songs/song9.mp3">Song 9</option>
+    <option value="songs/song10.mp3">Song 10</option>
+    <option value="songs/song11.mp3">Song 11</option>
+    <option value="songs/song12.mp3">Song 12</option>
+    <option value="songs/song13.mp3">Song 13</option>
+    <option value="songs/song14.mp3">Song 14</option>
+    <option value="songs/song15.mp3">Song 15</option>
+    <option value="songs/song16.mp3">Song 16</option>
+    <option value="songs/song17.mp3">Song 17</option>
+    <option value="songs/song18.mp3">Song 18</option>
+    <option value="songs/song19.mp3">Song 19</option>
+</select>
 
 <!-- Embed Iframe -->
 <div id="iframeContainer">
@@ -128,6 +155,7 @@ const passwordSubmit = document.getElementById('passwordSubmit');
 const buttons = document.getElementById('buttons');
 const musicButton = document.getElementById('musicButton');
 const musicToggle = document.getElementById('musicToggle');
+const musicSelector = document.getElementById('musicSelector');
 const bgMusic = document.getElementById('bgMusic');
 const iframe = document.getElementById('iframe');
 const hideIframeBtn = document.getElementById('hideIframe');
@@ -139,6 +167,7 @@ passwordSubmit.addEventListener('click', () => {
         passwordModal.style.display = 'none';
         buttons.style.display = 'inline-block';
         musicButton.style.display = 'inline-block';
+        musicSelector.style.display = 'inline-block';
     } else {
         alert("Wrong password!");
         passwordInput.value = "";
@@ -159,6 +188,17 @@ musicToggle.addEventListener('click', () => {
     } else {
         bgMusic.play();
         musicPlaying = true;
+    }
+});
+
+musicSelector.addEventListener('change', () => {
+    const selectedSong = musicSelector.value;
+    if(selectedSong){
+        bgMusic.src = selectedSong;
+        bgMusic.play();
+        musicPlaying = true;
+        musicButton.style.display = 'none';
+        musicToggle.style.display = 'inline-block';
     }
 });
 
