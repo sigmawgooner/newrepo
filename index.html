@@ -5,122 +5,183 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Hub</title>
 <style>
-body, html {
-  margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif;
-  background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
-  background-size: cover; overflow: hidden;
-}
-
-#passwordModal {
-  display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;
-}
-
-#passwordBox {
-  background: #111; padding: 30px; border-radius: 12px; text-align: center; color: #fff;
-}
-
-#controls {
-  display: none; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 500; text-align: center;
-}
-
-#siteDropdown, #musicButton, #musicToggle {
-  background: #222; color: #ddd; border: none; padding: 10px 20px;
-  border-radius: 8px; cursor: pointer; font-weight: bold; margin: 5px;
-}
-
-#siteDropdown:hover, #musicButton:hover, #musicToggle:hover { background: #555; }
-
-#iframeContainer {
-  position: absolute; top: 100px; left: 0; width: 100%; height: calc(100% - 100px); z-index: 100;
-}
-
-iframe { width: 100%; height: 100%; border: none; }
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background: url('clideo_editor_a113c19867f2476d955c9cc72a3afcc0-ezgif.com-crop.gif') no-repeat center center fixed;
+        background-size: cover;
+        overflow: hidden;
+    }
+    #passwordModal {
+        display: flex;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center; align-items: center;
+        z-index: 1000;
+    }
+    #passwordBox {
+        background: #111;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        color: #fff;
+    }
+    #buttons {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 500;
+        white-space: nowrap;
+    }
+    .siteButton {
+        background: #222;
+        color: #ddd;
+        border: none;
+        margin: 0 5px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .siteButton:hover {
+        background: #555;
+    }
+    #musicButton, #musicToggle {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #222;
+        color: #ddd;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 600;
+        margin-top: 5px;
+    }
+    #iframeContainer {
+        position: absolute;
+        top: 100px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 100px);
+        z-index: 100;
+    }
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
 </style>
 </head>
 <body>
 
 <!-- Password Modal -->
 <div id="passwordModal">
-  <div id="passwordBox">
-    <h2>Enter Password</h2>
-    <input type="password" id="passwordInput">
-    <button id="passwordSubmit">Submit</button>
-  </div>
+    <div id="passwordBox">
+        <h2>Enter Password</h2>
+        <input type="password" id="passwordInput">
+        <button id="passwordSubmit">Submit</button>
+    </div>
 </div>
 
-<!-- Controls: Dropdown + Music -->
-<div id="controls">
-  <select id="siteDropdown">
-    <option value="">-- Select Portal --</option>
-    <option value="https://kaikaikitan.onrender.com">Portal 1</option>
-    <option value="https://newsigmatism.onrender.com">Portal 2</option>
-    <option value="https://sigmatism-ovq4.onrender.com">Portal 3</option>
-    <option value="https://snorlaxs-cave-v4-dbef.onrender.com">Portal 4</option>
-  </select>
-  <button id="musicButton">Enable Music</button>
-  <button id="musicToggle">Toggle Music</button>
+<!-- Site Buttons -->
+<div id="buttons">
+    <!-- Original buttons -->
+    <button class="siteButton" data-url="https://skidlauncher-1ue5.onrender.com">Portal A</button>
+    <button class="siteButton" data-url="https://waddle-waddle-1k.onrender.com">Portal B</button>
+    <button class="siteButton" data-url="https://nepu.to">Portal C</button>
+    <button class="siteButton" data-url="https://fednbv.bitbucket.io">Portal D</button>
+    <button class="siteButton" data-url="https://thekingofcurses.bitbucket.io">Portal E</button>
+    <button class="siteButton" data-url="https://eduhelp.uk">Portal F</button>
+    <button class="siteButton" data-url="https://apes.io">Portal G</button>
+
+    <!-- Additional portals you mentioned -->
+    <button class="siteButton" data-url="https://kaikaikitan.onrender.com">Portal H</button>
+    <button class="siteButton" data-url="https://newsigmatism.onrender.com">Portal I</button>
+    <button class="siteButton" data-url="https://sigmatism-ovq4.onrender.com">Portal J</button>
+
+    <!-- Hide iframe -->
+    <button class="siteButton" id="hideIframe">Hide Iframe</button>
 </div>
+
+<!-- Music Buttons -->
+<button id="musicButton">Enable Music</button>
+<button id="musicToggle">Toggle Music</button>
 
 <!-- Embed Iframe -->
 <div id="iframeContainer">
-  <iframe id="iframe" src=""></iframe>
+    <iframe id="iframe" src=""></iframe>
 </div>
 
-<!-- Background Music -->
 <audio id="bgMusic" loop>
-  <source src="videoplayback.mp3" type="audio/mpeg">
+    <source src="videoplayback.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 const correctPassword = "KAIKAIKITAN";
+
 const passwordModal = document.getElementById('passwordModal');
 const passwordInput = document.getElementById('passwordInput');
 const passwordSubmit = document.getElementById('passwordSubmit');
-const controls = document.getElementById('controls');
-const siteDropdown = document.getElementById('siteDropdown');
+
+const buttons = document.getElementById('buttons');
 const musicButton = document.getElementById('musicButton');
 const musicToggle = document.getElementById('musicToggle');
 const bgMusic = document.getElementById('bgMusic');
 const iframe = document.getElementById('iframe');
+const hideIframeBtn = document.getElementById('hideIframe');
+
 let musicPlaying = false;
 
-// Password check
 passwordSubmit.addEventListener('click', () => {
-  if(passwordInput.value === correctPassword){
-    passwordModal.style.display = 'none';
-    controls.style.display = 'block';
-  } else {
-    alert("Wrong password!");
-    passwordInput.value = "";
-  }
+    if(passwordInput.value === correctPassword){
+        passwordModal.style.display = 'none';
+        buttons.style.display = 'inline-block';
+        musicButton.style.display = 'inline-block';
+    } else {
+        alert("Wrong password!");
+        passwordInput.value = "";
+    }
 });
 
-// Music controls
 musicButton.addEventListener('click', () => {
-  bgMusic.play();
-  musicPlaying = true;
-  musicButton.style.display = 'none';
-  musicToggle.style.display = 'inline-block';
+    bgMusic.play();
+    musicPlaying = true;
+    musicButton.style.display = 'none';
+    musicToggle.style.display = 'inline-block';
 });
 
 musicToggle.addEventListener('click', () => {
-  if(musicPlaying){
-    bgMusic.pause();
-    musicPlaying = false;
-  } else {
-    bgMusic.play();
-    musicPlaying = true;
-  }
+    if(musicPlaying){
+        bgMusic.pause();
+        musicPlaying = false;
+    } else {
+        bgMusic.play();
+        musicPlaying = true;
+    }
 });
 
-// Dropdown navigation
-siteDropdown.addEventListener('change', () => {
-  if(siteDropdown.value) {
-    iframe.src = siteDropdown.value;
-  }
+document.querySelectorAll('.siteButton').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if(btn.id !== "hideIframe"){
+            iframe.src = btn.dataset.url;
+        }
+    });
+});
+
+hideIframeBtn.addEventListener('click', () => {
+    iframe.src = "";
 });
 </script>
+
 </body>
 </html>
